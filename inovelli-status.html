@@ -69,6 +69,11 @@
         <option value="4">Pulse</option>
       </select>
     </div>
+    <div class="form-row">
+      <label for="node-input-switchtype"><i class="icon-tag"></i> Switch type</label>
+      <input type="radio" id="node-input-switchtype" value="8" checked> On/Off</input>
+      <input type="radio" id="node-input-switchtype" value="16"> Dimmer</input>
+    </div>
   </script>
 
 <script type="text/x-red" data-help-name="inovelli-status-manager">
@@ -88,6 +93,9 @@
     
         <dt class="optional">Display Type <span class="property-type">number</span></dt>
         <dd>Determines how the status light will behave. (0 is Off, 1 is Solid, 2 is Fast Blink, 3 is Slow Blink, 4 is Pulse)</dd>
+
+        <dt class="optional">Switch Type <span class="property-type">radio</span></dt>
+        <dd>Determines which parameter to set. (8 is for on/off switches, 16 is for dimmer switches)</dd>
     </dl>
     <p>
       It is possible to override values set on this node by passing values in a payload e.g.
@@ -98,7 +106,8 @@ msg = {
     color: 1,
     duration: 10,
     display: 1,
-    level: 10
+    level: 10,
+    switchtype: 8
   }
 }
       </pre>

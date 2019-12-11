@@ -60,7 +60,8 @@ describe('inovelli-status node', function () {
           color: 1,
           duration: 10,
           display: 1,
-          level: 10
+          level: 10,
+          switchtype: 8
         }
       });
     });

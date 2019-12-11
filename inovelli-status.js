@@ -8,6 +8,7 @@ module.exports = function(RED) {
         level,
         duration,
         display,
+        switchtype,
       } = config;
 
       this.nodeid = nodeid;
@@ -15,6 +16,7 @@ module.exports = function(RED) {
       this.level = parseInt(level, 10);
       this.duration = duration;
       this.display = parseInt(display, 10);
+      this.switchtype = switchtype;
 
       node.on('input', msg => {
           const { 
@@ -23,6 +25,7 @@ module.exports = function(RED) {
             level: presetLevel,
             duration: presetDuration,
             display: presetDisplay,
+            switchtype: presetSwitchtype,
           } = node;
           const { payload } = msg;
 
@@ -30,12 +33,13 @@ module.exports = function(RED) {
           const level = (payload.level || presetLevel) * 255;
           const duration = (payload.duration ||  presetDuration) * 65536;
           const display = (payload.display || presetDisplay) * 16777216;
+          const switchtype = (payload.switchtype || presetSwitchtype);
           const nodeId = payload.nodeId || nodeid
           const value = color + level + duration + display;
           const node_id = nodeId ? { node_id: nodeId } : {};
           const data = {
             ...node_id,
-            parameter: 8,
+            parameter: switchtype,
             size: 4,
             value
         }
