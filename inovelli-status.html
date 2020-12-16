@@ -5,7 +5,7 @@
         defaults: {
             name: { value: '' },
             nodeid: { value: '' },
-            color: { value: 1 },
+            color: { value: 0 },
             level: { value: 10 },
             duration: { value: 30 },
             display: { value: 1 },
@@ -78,7 +78,7 @@
       <label for="node-input-color"><i class="icon-tag"></i> Color</label>
       <div class="color-picker-input">
           <div class="color-picker" />
-          <input type="range" id="node-input-color" name="level" min="1" max="255">
+          <input type="range" id="node-input-color" name="level" min="0" max="255">
       </div>
     </div>
     <div class="form-row">
@@ -116,7 +116,7 @@
         <dd>Z-wave node id of the inovelli switch you are trying to set status on</dd>
     
         <dt class="optional">Color <span class="property-type">number</span></dt>
-        <dd>Number of the color you want to display (1-255)</dd>
+        <dd>Number of the color you want to display (0-255)</dd>
     
         <dt class="optional">Level <span class="property-type">number</span></dt>
         <dd>Brightness of status light (10 - right side) is brightest</dd>
@@ -136,7 +136,7 @@
 msg = {
   payload: {
     nodeId: 20,
-    color: 1,
+    color: 0,
     duration: 10,
     display: 1,
     level: 10,
