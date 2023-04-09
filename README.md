@@ -1,6 +1,6 @@
 ## Inovelli Status Manager Node
 
-This node allows you to easily set the appropriate value to send to your Inovelli red series switch.
+This node allows you to easily set the appropriate value to send to your Inovelli red or blue series switches.
 
 ### Z-wave (red) switches w/ zwave_js
 
@@ -21,7 +21,7 @@ You will want to set the topic to `zigbee2mqtt/FRIENDLY_NAME/set`.
 
 #### Node-RED mqtt out node
 
-You can wire the configration node directly to the mqtt out node. You just need to set the topic ``zigbee2mqtt/FRIENDLY_NAME/set`.
+You can wire the configration node directly to the mqtt out node. You just need to set the topic `zigbee2mqtt/FRIENDLY_NAME/set`.
 
 #### Home Assistant MQTT Publish node
 
