@@ -1,53 +1,153 @@
 <script type="text/javascript">
-    RED.nodes.registerType('inovelli-status-manager',{
-        category: 'home assistant',
-        color: '#B68181',
-        defaults: {
-            name: { value: '' },
-            nodeid: { value: '' },
-            color: { value: 0 },
-            level: { value: 10 },
-            duration: { value: 30 },
-            display: { value: 1 },
-            switchtype: { value: 8 }
-        },
-        inputs:1,
-        outputs:1,
-        icon: 'arrow-in.svg',
-        align: 'right',
-        label: function() {
-            return this.name || 'inovelli-status-manager';
-        },
-        oneditprepare: function() {
-          let previous;
-          const onOffOptions = 
-            `<option value="0">Off</option>
-            <option value="1">Solid</option>
-            <option value="2">Fast Blink</option>
-            <option value="3">Slow Blink</option>
-            <option value="4">Pulse</option>`
+  const lzw30Options =
+    [{ value: "0", label: "Off" },
+    { value: "1", label: "Solid" },
+    { value: "2", label: "Fast Blink" },
+    { value: "3", label: "Slow Blink" },
+    { value: "4", label: "Pulse" }]
 
-          const dimmerOptions = 
-            `<option value="0">Off</option>
-            <option value="1">Solid</option>
-            <option value="2">Chase</option>
-            <option value="3">Fast Blink</option>
-            <option value="4">Slow Blink</option>
-            <option value="5">Pulse</option>` 
+  const lzw31Options =
+    [{ value: "0", label: "Off" },
+    { value: "1", label: "Solid" },
+    { value: "2", label: "Chase" },
+    { value: "3", label: "Fast Blink" },
+    { value: "4", label: "Slow Blink" },
+    { value: "5", label: "Pulse" }]
 
-          $('#node-input-switchtype').on('change', function() {
-            const displayInput = $('#node-input-display');
-            if (previous) previous = "0";
-            if (!previous) previous = displayInput.val();
-            if (this.value === '8') {
-              displayInput.html(onOffOptions);
-            } else {
-              displayInput.html(dimmerOptions);
-            }
-            displayInput.val(previous);
-          });
+  const vzm31SnOptions =
+    [{ value: "off", label: "Off" },
+    { value: "solid", label: "Solid" },
+    { value: "fast_blink", label: "Fast Blink" },
+    { value: "slow_blink", label: "Slow Blink" },
+    { value: "pulse", label: "Pulse" },
+    { value: "chase", label: "Chase" },
+    { value: "open_close", label: "Open/Close" },
+    { value: "small_to_big", label: "Small to Big" },
+    { value: "aurora", label: "Aurora" },
+    { value: "slow_falling", label: "Slow Falling" },
+    { value: "medium_falling", label: "Medium Falling" },
+    { value: "fast_falling", label: "Fast Falling" },
+    { value: "slow_rising", label: "Slow Rising" },
+    { value: "medium_rising", label: "Medium Rising" },
+    { value: "fast_rising", label: "Fast Rising" },
+    { value: "medium_blink", label: "Medium Blink" },
+    { value: "slow_chase", label: "Slow Chase" },
+    { value: "fast_chase", label: "Fast Chase" },
+    { value: "fast_siren", label: "Fast Siren" },
+    { value: "slow_siren", label: "Slow Siren" },
+    { value: "clear_effect", label: "Clear Effect" }]
+
+  RED.nodes.registerType('inovelli-status-manager', {
+    category: 'home assistant',
+    color: '#B68181',
+    defaults: {
+      name: { value: '' },
+      nodeid: { value: '' },
+      color: { value: 0 },
+      level: { value: 10 },
+      duration: { value: 30 },
+      display: { value: 1 },
+      switchtype: { value: 8 }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'arrow-in.svg',
+    align: 'right',
+    label: function () {
+      return this.name || 'Inovelli Status Manager';
+    },
+    oneditprepare: function () {
+      const switchInput = $('#node-input-switchtype');
+      let switchType = switchInput.val();
+      let displayType = $('#node-input-display').val();
+
+      // Handle legacy migration of switch type from '8' and '16' to their respective names
+      console.log(switchType);
+
+      if (switchType === '8') {
+        switchInput.val('LZW30-SN');
+        switchType = 'LZW30-SN';
+      } else if (switchType === '16') {
+        switchInput.val('LZW31-SN');
+        switchType = 'LZW31-SN';
+      }
+      
+      ['#lzw30-animations', '#lzw31-animations', '#vzm31-animations'].forEach((selector) => {
+        $(selector).val(displayType);
+      });
+
+      const lzw30Animation = $("#lzw30-animations").typedInput({
+        type: "display", types: [{
+          options: lzw30Options
+        }]
+      });
+
+      const lzw31Animation = $("#lzw31-animations").typedInput({
+        type: 'display',
+        types: [
+          {
+            options: lzw31Options
+          }
+        ]
+      });
+
+      const vzm31Animation = $("#vzm31-animations").typedInput({
+        type: 'display',
+        types: [
+          {
+            options: vzm31SnOptions
+          }
+        ]
+      });
+
+      [lzw30Animation, lzw31Animation, vzm31Animation].forEach((animationDropdown) => {
+        animationDropdown.on('change', (event, type, value) => {
+          $('#node-input-display').val(value);
+        });
+      });
+
+      console.log(switchType);
+
+      const showCorrectAnimationDropdown = (switchVal) => {
+        if (switchVal === 'LZW30-SN') {
+          lzw30Animation.typedInput('show');
+          lzw31Animation.typedInput('hide');
+          vzm31Animation.typedInput('hide');
+
+          $('#node-input-display').val(lzw30Animation.typedInput('value'));
+        } else if (switchVal === 'LZW31-SN') {
+          lzw30Animation.typedInput('hide');
+          lzw31Animation.typedInput('show');
+          vzm31Animation.typedInput('hide');
+          $('#node-input-display').val(lzw31Animation.typedInput('value'));
+        } else {
+          lzw30Animation.typedInput('hide');
+          lzw31Animation.typedInput('hide');
+          vzm31Animation.typedInput('show');
+          $('#node-input-display').val(vzm31Animation.typedInput('value'));
         }
-    });
+      }
+
+      showCorrectAnimationDropdown(switchType);
+
+      $("#node-input-switchtype").typedInput({
+        types: [
+          {
+            value: switchType,
+            options: [
+              { value: "LZW30-SN", label: "On/Off (LZW30-SN Red)" },
+              { value: "LZW31-SN", label: "Dimmer (LZW31-SN Red)" },
+              { value: "VZM31-SN", label: "Dimmer (VZM31-SN Blue)" },
+            ]
+          }
+        ]
+      });
+
+      switchInput.on('change', function () {
+        showCorrectAnimationDropdown(this.value);
+      });
+    }
+  });
 </script>
 
 <script type="text/x-red" data-template-name="inovelli-status-manager">
@@ -65,19 +165,22 @@
         display: inline-block;
         width: 70%;
       }
+      .form-row .red-ui-typedInput-container {
+        max-width: 70%;
+      }
     </style>
+    <div class="form-row">
+      <label for="node-input-switchtype"><i class="icon-tag"></i> Switch type</label>
+      <input type="text" id="node-input-switchtype">
+    </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    <div class="form-row">
-      <label for="node-input-nodeid"><i class="icon-tag"></i> Node Id</label>
-      <input type="number" id="node-input-nodeid">
-    </div>
     <div class="form-row color-input">
       <label for="node-input-color"><i class="icon-tag"></i> Color</label>
       <div class="color-picker-input">
-          <div class="color-picker" />
+          <div class="color-picker"></div>
           <input type="range" id="node-input-color" name="level" min="0" max="255">
       </div>
     </div>
@@ -87,25 +190,14 @@
     </div>
     <div class="form-row">
       <label for="node-input-duration"><i class="icon-tag"></i> Duration (seconds)</label>
-      <input type="number" id="node-input-duration" min="1" max="255">
+      <input type="number" id="node-input-duration" min="1" max="482401">
     </div>
     <div class="form-row">
-      <label for="node-input-display"><i class="icon-tag"></i> Display Type</label>
-      <select name="node-input-display" id="node-input-display">
-          <option value="0">Placeholder</option>
-          <option value="1">Placeholder</option>
-          <option value="2">Placeholder</option>
-          <option value="3">Placeholder</option>
-          <option value="4">Placeholder</option>
-          <option value="5">Placeholder</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <label for="node-input-switchtype"><i class="icon-tag"></i> Switch type</label>
-      <select name="node-input-switchtype" id="node-input-switchtype">
-          <option value="8">On/Off (LZW30-SN)</option>
-          <option value="16">Dimmer (LZW31-SN)</option>
-      </select>
+      <label for="node-input-display"><i class="icon-tag"></i> Display Animation</label>
+      <input type="hidden" id="node-input-display">
+      <input type="text" id="lzw30-animations">
+      <input type="text" id="lzw31-animations">
+      <input type="text" id="vzm31-animations">
     </div>
   </script>
 
@@ -113,7 +205,7 @@
     <p>This node will help construct the value for setting status on an Inovelli Red Series switch.  The output should be connected to a call service node with domain set to <strong>zwave</strong> and service set to <strong>set_config_parameter</strong>.</p>
     <dl class="message-properties">
         <dt>Node Id <span class="property-type">number</span></dt>
-        <dd>Z-wave node id of the inovelli switch you are trying to set status on</dd>
+        <dd>Z-wave node id of the inovelli switch you are trying to set status on (this should be omitted for blue/zigbee switches)</dd>
     
         <dt class="optional">Color <span class="property-type">number</span></dt>
         <dd>Number of the color you want to display (0-255)</dd>
@@ -122,27 +214,27 @@
         <dd>Brightness of status light (10 - right side) is brightest</dd>
     
         <dt class="optional">Duration <span class="property-type">number</span></dt>
-        <dd>Duration in seconds to display the notification.  (1-255) Note: Setting this to 255 will leave the status light on indefinitely.</dd>
+        <dd>Duration in seconds to display the notification.  (1-255) Note: Setting this to 255 will leave the status light on indefinitely.  For Blue switches there is support for 1-60 seconds and 1-60 minutes and 1-134 hours.  Any seconds over 60 will be rounded to the nearest minute (e.g. 61 = 1 minute, 110 = 2 minutes), any seconds over 60 minutes will be rounded to the nearest hour.  Entering 482401 or above will change the color indefinitely.</dd>
     
         <dt class="optional">Display Type <span class="property-type">number</span></dt>
         <dd>Determines how the status light will behave. (0 is Off, 1 is Solid, 2 is Fast Blink, 3 is Slow Blink, 4 is Pulse)</dd>
 
         <dt class="optional">Switch Type <span class="property-type">radio</span></dt>
-        <dd>Determines which parameter to set. (8 is for on/off switches, 16 is for dimmer switches)</dd>
+        <dd>Determines which parameter to set. (8 is for RED on/off switches, 16 is for RED dimmer switches, "VZM31-SN" is for BLUE dimmer switches)</dd>
     </dl>
     <p>
       It is possible to override values set on this node by passing values in a payload e.g.
       <pre>
-msg = {
-  payload: {
-    nodeId: 20,
-    color: 0,
-    duration: 10,
-    display: 1,
-    level: 10,
-    switchtype: 8
-  }
-}
+        msg = {
+          payload: {
+            nodeId: 20,
+            color: 0,
+            duration: 10,
+            display: 1,
+            level: 10,
+            switchtype: 8
+          }
+        }
       </pre>
     </p>
 </script>

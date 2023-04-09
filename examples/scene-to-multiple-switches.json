@@ -1,1 +1,65 @@
-[{"id":"f651da8c.4816f8","type":"tab","label":"Flow 1","disabled":false,"info":""},{"id":"e23e089f.6aecb8","type":"inject","z":"f651da8c.4816f8","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":680,"y":240,"wires":[["b38bd8b8.5a2af8"]]},{"id":"b38bd8b8.5a2af8","type":"inovelli-status-manager","z":"f651da8c.4816f8","name":"","nodeid":"","color":"107","level":10,"duration":30,"display":"2","x":910,"y":240,"wires":[["531f74fb.6c3d3c","7c297c51.a04874","b723e1f.8abd12","d010294e.c69128"]]},{"id":"531f74fb.6c3d3c","type":"api-call-service","z":"f651da8c.4816f8","name":"node 1","server":"","service_domain":"zwave","service":"set_config_parameter","data":"{ \"node_id\": 1 }","mergecontext":"","x":1150,"y":200,"wires":[[]]},{"id":"7c297c51.a04874","type":"api-call-service","z":"f651da8c.4816f8","name":"node 2","server":"","service_domain":"zwave","service":"set_config_parameter","data":"{ \"node_id\": 2 }","mergecontext":"","x":1150,"y":240,"wires":[[]]},{"id":"b723e1f.8abd12","type":"api-call-service","z":"f651da8c.4816f8","name":"node 3","server":"","service_domain":"zwave","service":"set_config_parameter","data":"{ \"node_id\": 1 }","mergecontext":"","x":1150,"y":280,"wires":[[]]},{"id":"d010294e.c69128","type":"api-call-service","z":"f651da8c.4816f8","name":"node 4","server":"","service_domain":"zwave","service":"set_config_parameter","data":"{ \"node_id\": 1 }","mergecontext":"","x":1150,"y":320,"wires":[[]]},{"id":"2f9b477.d2230b8","type":"comment","z":"f651da8c.4816f8","name":"","info":"Note: node id is not set on the status manager, it is set on the svc calls and the svc call only inherits the value and other params","x":860,"y":200,"wires":[]}]
+[
+  {
+    "id": "e23e089f.6aecb8",
+    "type": "inject",
+    "name": "",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 680,
+    "wires": [["b38bd8b8.5a2af8"]]
+  },
+  {
+    "id": "b38bd8b8.5a2af8",
+    "type": "inovelli-status-manager",
+    "name": "",
+    "nodeid": "",
+    "color": "107",
+    "level": 10,
+    "duration": 30,
+    "display": "2",
+    "x": 910,
+    "wires": [["7c297c51.a04874"]]
+  },
+  {
+    "id": "7c297c51.a04874",
+    "type": "api-call-service",
+    "z": "86e0312b.079b8",
+    "name": "Grow",
+    "server": "cdeacb62.bfde18",
+    "version": 1,
+    "debugenabled": false,
+    "service_domain": "zwave_js",
+    "service": "bulk_set_partial_config_parameters",
+    "entityId": "switch.one, switch.two",
+    "data": "",
+    "dataType": "json",
+    "mergecontext": "",
+    "output_location": "payload",
+    "output_location_type": "none",
+    "mustacheAltTags": false,
+    "x": 570,
+    "wires": [[]]
+  },
+  {
+    "id": "cdeacb62.bfde18",
+    "type": "server",
+    "name": "Home Assistant",
+    "legacy": false,
+    "rejectUnauthorizedCerts": true,
+    "ha_boolean": "y|yes|true|on|home|open",
+    "connectionDelay": true
+  },
+  {
+    "id": "2f9b477.d2230b8",
+    "type": "comment",
+    "name": "",
+    "info": "Note: Because you can select entityIds you can just select multiple for bulk_set_partial_config_parameters to get called to",
+    "x": 860,
+    "wires": []
+  }
+]

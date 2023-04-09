@@ -1,0 +1,70 @@
+[
+  {
+    "id": "91df63c429be575f",
+    "type": "api-call-service",
+    "name": "",
+    "version": 5,
+    "debugenabled": false,
+    "domain": "mqtt",
+    "service": "publish",
+    "areaId": [],
+    "deviceId": [],
+    "entityId": [],
+    "data": "{\"topic\":\"zigbee2mqtt/DEVICE NAME/set\"}",
+    "dataType": "json",
+    "mergeContext": "",
+    "mustacheAltTags": false,
+    "queue": "none",
+    "x": 1390,
+    "wires": [[]]
+  },
+  {
+    "id": "50be2f02b3dc5b09",
+    "type": "inovelli-status-manager",
+    "name": "",
+    "nodeid": "",
+    "color": "131",
+    "level": 10,
+    "duration": 30,
+    "display": "fast_falling",
+    "switchtype": "VZM31-SN",
+    "x": 970,
+    "wires": [["52f8a9ce13be9ff2"]]
+  },
+  {
+    "id": "d367118c22177385",
+    "type": "inject",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 740,
+    "wires": [["50be2f02b3dc5b09"]]
+  },
+  {
+    "id": "52f8a9ce13be9ff2",
+    "type": "function",
+    "name": "json to string",
+    "func": "return {\n    ...msg,\n    payload: {\n        data: {\n            payload: JSON.stringify(msg.payload)\n        }\n    }\n};",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1210,
+    "wires": [["91df63c429be575f"]]
+  }
+]

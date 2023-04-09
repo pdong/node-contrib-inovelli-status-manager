@@ -1,1 +1,40 @@
-[{"id":"f651da8c.4816f8","type":"tab","label":"Flow 1","disabled":false,"info":""},{"id":"e23e089f.6aecb8","type":"inject","z":"f651da8c.4816f8","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":680,"y":240,"wires":[["b38bd8b8.5a2af8"]]},{"id":"b38bd8b8.5a2af8","type":"inovelli-status-manager","z":"f651da8c.4816f8","name":"","nodeid":"1","color":"107","level":10,"duration":30,"display":"2","x":910,"y":240,"wires":[["531f74fb.6c3d3c"]]},{"id":"531f74fb.6c3d3c","type":"api-call-service","z":"f651da8c.4816f8","name":"","server":"","service_domain":"zwave","service":"set_config_parameter","data":"","mergecontext":"","x":1200,"y":240,"wires":[[]]}]
+[
+  {
+    "id": "basic-scene-1",
+    "type": "inject",
+    "name": "",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 780,
+    "wires": [["basic-scene-2"]]
+  },
+  {
+    "id": "basic-scene-2",
+    "type": "inovelli-status-manager",
+    "name": "",
+    "nodeid": "1",
+    "color": "107",
+    "level": 10,
+    "duration": 30,
+    "display": "2",
+    "x": 990,
+    "wires": [["basic-scene-3"]]
+  },
+  {
+    "id": "basic-scene-3",
+    "type": "api-call-service",
+    "name": "",
+    "server": "",
+    "service_domain": "zwave_js",
+    "service": "bulk_set_partial_config_parameters",
+    "data": "",
+    "mergecontext": "",
+    "x": 1300,
+    "wires": [[]]
+  }
+]
