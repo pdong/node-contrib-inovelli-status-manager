@@ -1,0 +1,53 @@
+[
+  {
+    "id": "example-1",
+    "type": "inject",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 200,
+    "wires": [["example-2"]]
+  },
+  {
+    "id": "example-2",
+    "type": "inovelli-status-manager",
+    "name": "",
+    "nodeid": "",
+    "color": "82",
+    "level": 10,
+    "duration": 30,
+    "display": "slow_blink",
+    "switchtype": "VZM31-SN",
+    "x": 410,
+    "wires": [["example-3"]]
+  },
+  {
+    "id": "example-3",
+    "type": "mqtt out",
+    "name": "",
+    "topic": "zigbee2mqtt/Device Name/set",
+    "qos": "",
+    "retain": "",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "x": 690,
+    "wires": []
+  }
+]

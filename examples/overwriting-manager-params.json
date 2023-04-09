@@ -1,1 +1,63 @@
-[{"id":"f651da8c.4816f8","type":"tab","label":"Flow 1","disabled":false,"info":""},{"id":"b38bd8b8.5a2af8","type":"inovelli-status-manager","z":"f651da8c.4816f8","name":"","nodeid":"","color":"107","level":10,"duration":30,"display":"2","x":910,"y":240,"wires":[["531f74fb.6c3d3c"]]},{"id":"531f74fb.6c3d3c","type":"api-call-service","z":"f651da8c.4816f8","name":"node 1","server":"","service_domain":"zwave","service":"set_config_parameter","data":"{ \"node_id\": 1 }","mergecontext":"","x":1110,"y":240,"wires":[[]]},{"id":"2f9b477.d2230b8","type":"comment","z":"f651da8c.4816f8","name":"","info":"You can send payload parameters to override status manager settings (e.g. programatically setting a color or pulse type)","x":700,"y":200,"wires":[]},{"id":"e23e089f.6aecb8","type":"inject","z":"f651da8c.4816f8","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":540,"y":240,"wires":[["35c95880.f6fe18"]]},{"id":"35c95880.f6fe18","type":"function","z":"f651da8c.4816f8","name":"","func":"return {\n    payload: {\n        color: 1,\n        display: 3,\n    }\n}","outputs":1,"noerr":0,"x":690,"y":240,"wires":[["b38bd8b8.5a2af8"]]}]
+[
+  {
+    "id": "overwriting-manager-params-1",
+    "type": "inovelli-status-manager",
+    "name": "",
+    "nodeid": "",
+    "color": "107",
+    "level": 10,
+    "duration": 30,
+    "display": "2",
+    "x": 910,
+    "y": 240,
+    "wires": [["overwriting-manager-params-2"]]
+  },
+  {
+    "id": "overwriting-manager-params-2",
+    "type": "api-call-service",
+    "name": "node 1",
+    "server": "",
+    "service_domain": "zwave_js",
+    "service": "bulk_set_partial_config_parameters",
+    "data": "{ \"color\": 255 }",
+    "mergecontext": "",
+    "x": 1110,
+    "y": 240,
+    "wires": [[]]
+  },
+  {
+    "id": "over-writing-manager-params-comment",
+    "type": "comment",
+    "name": "",
+    "info": "You can send payload parameters to override status manager settings (e.g. programatically setting a color or pulse type)",
+    "x": 700,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "overwriting-manager-params-0",
+    "type": "inject",
+    "name": "",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 540,
+    "y": 240,
+    "wires": [["overwriting-manager-params-5"]]
+  },
+  {
+    "id": "overwriting-manager-params-5",
+    "type": "function",
+    "name": "",
+    "func": "return {\n    payload: {\n        color: 1,\n        display: 3,\n    }\n}",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 690,
+    "y": 240,
+    "wires": [["overwriting-manager-params-1"]]
+  }
+]
